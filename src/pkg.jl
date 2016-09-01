@@ -2,11 +2,11 @@ function trial(pkg::AbstractString, baseline::AbstractString, candidate::Abstrac
     repo = LibGit2.GitRepo(Pkg.dir(pkg))
     org_head = LibGit2.head_oid(repo)
 
-    info("Benchmarking baseline")
+    info("Benchmarking baseline ($baseline)")
     checkout_safe!(repo, baseline)
     trial_baseline = benchmark(pkg)
 
-    info("Benchmarking candidate")
+    info("Benchmarking candidate ($candidate)")
     checkout_safe!(repo, candidate)
     trial_candidate = benchmark(pkg)
 
@@ -20,14 +20,13 @@ function benchmark(pkg::AbstractString)
     code = """
         using BenchmarkTools
         open("$(escape_string(results_file))", "w") do f
-            pkg = first(ARGS)
-            suite = include(Pkg.dir(pkg, "test", "performance.jl"))
+            suite = include(Pkg.dir("$(escape_string(pkg))", "bench", "benchmarks.jl"))
             results = run(suite, verbose=true)
             serialize(f, results)
         end
     """
     results = try
-        run(`$(Base.julia_cmd()) --eval $code $pkg`)
+        run(`$(Base.julia_cmd()) --eval $code`)
         open(results_file, "r") do f
             deserialize(f)
         end

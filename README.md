@@ -13,23 +13,27 @@ julia> using BenchmarkTools
 
 julia> using PkgBenchmarks
 
-julia> a, b = trial("TimeZones", "master", "regression");
-INFO: Benchmarking baseline
+julia> a, b = trial("TimeZones", "regression", "improvement");
+INFO: Benchmarking baseline (regression)
 (1/1) benchmarking "parse"...
   (1/1) benchmarking "multiple"...
-  done (took 5.484268865 seconds)
-done (took 5.652773505 seconds)
-INFO: Benchmarking candidate
+  done (took 7.974803644 seconds)
+done (took 8.150638788 seconds)
+INFO: Benchmarking candidate (improvement)
 (1/1) benchmarking "parse"...
   (1/1) benchmarking "multiple"...
-  done (took 7.896175863 seconds)
-done (took 8.069294301 seconds)
+  done (took 5.508084035 seconds)
+done (took 5.673741745 seconds)
 
 julia> regs = regressions(judge(minimum(a), minimum(b)));
 
 julia> pairs = leaves(regs)
+0-element Array{Any,1}
+
+julia> pairs = leaves(judge(minimum(a), minimum(b)))
 1-element Array{Any,1}:
  (Any["parse","multiple"],BenchmarkTools.TrialJudgement: 
-  time:   +14669.85% => regression (5.00% tolerance)
-  memory: +15914.09% => regression (1.00% tolerance))
+  time:   -99.31% => improvement (5.00% tolerance)
+  memory: -99.38% => improvement (1.00% tolerance))
+
 ```
