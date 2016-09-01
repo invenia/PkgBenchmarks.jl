@@ -17,7 +17,7 @@ julia> using BenchmarkTools
 
 julia> using PkgBenchmarks
 
-julia> a, b = benchmark("TimeZones", "regression", "improvement");
+julia> a, b = benchmark("TimeZones", "regression", "improvement");  # Requires TimeZones to be installed and the local branches "regression" and "improvement" to exist
 INFO: Benchmarking baseline (regression)
 (1/1) benchmarking "parse"...
   (1/1) benchmarking "multiple"...
