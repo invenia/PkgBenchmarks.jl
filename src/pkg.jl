@@ -2,11 +2,13 @@ function trial(pkg::AbstractString, baseline::AbstractString, candidate::Abstrac
     repo = LibGit2.GitRepo(Pkg.dir(pkg))
     org_head = LibGit2.head_oid(repo)
 
-    checkout_safe!(repo, candidate)
-    trial_candidate = benchmark(pkg)
-
+    info("Benchmarking baseline")
     checkout_safe!(repo, baseline)
     trial_baseline = benchmark(pkg)
+
+    info("Benchmarking candidate")
+    checkout_safe!(repo, candidate)
+    trial_candidate = benchmark(pkg)
 
     checkout_safe!(repo, org_head)
     return trial_candidate, trial_baseline
@@ -24,14 +26,14 @@ function benchmark(pkg::AbstractString)
             serialize(f, results)
         end
     """
-    cmd = `$(Base.julia_cmd()) --eval $code $pkg`
-    io, pobj = open(pipeline(detach(cmd), stderr=STDERR), "w", STDOUT)
-
-    wait(pobj)
-    close(io)
-    results = open(results_file, "r") do f
-       deserialize(f)
+    results = try
+        run(`$(Base.julia_cmd()) --eval $code $pkg`)
+        open(results_file, "r") do f
+            deserialize(f)
+        end
+    finally
+        isfile(results_file) && rm(results_file)
     end
-    isfile(results_file) && rm(results_file)
+
     return results
 end
