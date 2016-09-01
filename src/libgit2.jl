@@ -28,3 +28,12 @@ function checkout_safe!(repo::LibGit2.GitRepo, oid::Base.LibGit2.Oid)
     length(LibGit2.GitStatus(repo)) == 0 || error("Repo has uncommited changes")
     LibGit2.checkout!(repo, string(oid), force=true)
 end
+
+function checkout_safe!(repo::AbstractString, rev::AbstractString)
+    # Avoid LibGit2 altogether...
+    run(`git --git-dir $(joinpath(repo, ".git")) checkout $rev`)
+end
+
+function sha(repo::AbstractString, rev::AbstractString="HEAD")
+    readchomp(`git --git-dir $(joinpath(repo, ".git")) rev-parse $rev`)
+end
