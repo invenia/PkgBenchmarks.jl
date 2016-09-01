@@ -6,7 +6,11 @@
 
 [![codecov.io](http://codecov.io/github/omus/PkgBenchmarks.jl/coverage.svg?branch=master)](http://codecov.io/github/omus/PkgBenchmarks.jl?branch=master)
 
-A quick example:
+A prototype package demonstrating a possible interface for package benchmarking. The 
+`benchmark` function expects that the target package has a "bench/benchmarks.jl" which
+returns a benchmark suite for the package.
+
+An example:
 
 ```julia
 julia> using BenchmarkTools
@@ -25,15 +29,17 @@ INFO: Benchmarking candidate (improvement)
   done (took 5.508084035 seconds)
 done (took 5.673741745 seconds)
 
-julia> regs = regressions(judge(minimum(a), minimum(b)));
-
-julia> pairs = leaves(regs)
-0-element Array{Any,1}
-
 julia> pairs = leaves(judge(minimum(a), minimum(b)))
 1-element Array{Any,1}:
  (Any["parse","multiple"],BenchmarkTools.TrialJudgement: 
   time:   -99.31% => improvement (5.00% tolerance)
   memory: -99.38% => improvement (1.00% tolerance))
 
+```
+
+Additionally you can generate basic Markdown reports:
+
+```julia
+julia> PkgBenchmarks.printreport(STDOUT, judge(minimum(a), minimum(b)))
+...
 ```
