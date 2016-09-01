@@ -3,7 +3,7 @@ module PkgBenchmarks
 using BenchmarkTools
 using Base.LibGit2
 
-export benchmark, trial
+export benchmark
 
 include("pkg.jl")
 include("libgit2.jl")

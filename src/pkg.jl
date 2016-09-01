@@ -1,4 +1,11 @@
-function trial(pkg::AbstractString, baseline::AbstractString, candidate::AbstractString="HEAD")
+"""
+    benchmark(pkg, baseline, candidate="HEAD") -> Tuple{BenchmarkGroup,BenchmarkGroup}
+
+Runs the package benchmarks for the Git revisions `baseline` and `candidate` and returns the
+results. Package are expected to have a "bench/benchmarks.jl" file which returns the
+benchmark suite.
+"""
+function benchmark(pkg::AbstractString, baseline::AbstractString, candidate::AbstractString="HEAD")
     repo = LibGit2.GitRepo(Pkg.dir(pkg))
     org_head = LibGit2.head_oid(repo)
 
