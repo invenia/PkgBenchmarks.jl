@@ -19,12 +19,13 @@ function travis_benchmark(slug, token, pkg, baseline, candidate)
                     "git remote set-branches origin $baseline $candidate",
                     "if [[ -a .git/shallow ]]; then git fetch --unshallow; fi",
                     "julia -e 'Pkg.init(); symlink(pwd(), Pkg.dir(\"$pkg\")); Pkg.resolve(); Pkg.build(\"$pkg\");'",
+                    # "julia -e 'Pkg.clone(pwd()); Pkg.build(\"$pkg\");'",
                     "julia -e 'Pkg.clone(\"https://github.com/invenia/PkgBenchmarks.jl\"); Pkg.checkout(\"PkgBenchmarks\", \"travis-ci\");'",  # Temporary
                     "julia -e 'Pkg.add(\"BenchmarkTools\");'",  # Should be handled by a REQUIRE file
                 ],
                 "script" => [
                     # TODO: Cause failure upon finding any regression
-                    "julia -e 'using PkgBenchmarks, BenchmarkTools; run(`git checkout $baseline`); run(`git rev-parse HEAD`); b = benchmark(\"$pkg\"); run(`git checkout $candidate`); run(`git rev-parse HEAD`); a = benchmark(\"$pkg\"); println(leaves(judge(minimum(a), minimum(b)))); showall(a); showall(b);'",
+                    "julia -e 'using PkgBenchmarks, BenchmarkTools; a, b = benchmark(\"$pkg\", \"$baseline\", \"$candidate\"); println(leaves(judge(minimum(a), minimum(b)))); showall(a); showall(b);'",
                 ],
                 "after_success" => "echo hi",  # TODO: find a better way to override "after_success"
             ),
