@@ -23,7 +23,7 @@ function travis_benchmark(slug, token, pkg, baseline, candidate)
                     "if [[ -a .git/shallow ]]; then git fetch --unshallow; fi",
                     "git branch $baseline origin/$baseline",  # Now both candidate and baseline are local branches
                     "julia -e 'Pkg.clone(pwd()); Pkg.build(\"$pkg\");'",
-                    "julia -e 'Pkg.clone(\"https://github.com/invenia/PkgBenchmarks.jl\"); Pkg.checkout(\"PkgBenchmarks\", \"travis-ci\");'",  # Temporary
+                    "julia -e 'Pkg.clone(\"https://github.com/invenia/PkgBenchmarks.jl\");'",  # Temporary
                 ],
                 "script" => [
                     # Note: Due to using `Pkg.clone` the origin actually refers to local branches in the `pwd()` repo.
