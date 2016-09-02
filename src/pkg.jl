@@ -37,7 +37,8 @@ function benchmark(pkg::AbstractString)
         end
     """
     results = try
-        run(`$(Base.julia_cmd()) --eval $code`)
+        # Disable use of the compile cache as we may have changed code revisions.
+        run(`$(Base.julia_cmd()) --compilecache=no --eval $code`)
         open(results_file, "r") do f
             deserialize(f)
         end
