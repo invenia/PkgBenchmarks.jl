@@ -22,7 +22,7 @@ function travis_benchmark(slug, token, pkg, baseline, candidate)
                     "julia -e 'Pkg.clone(\"https://github.com/invenia/PkgBenchmarks.jl\"); Pkg.checkout(\"PkgBenchmarks\", \"travis-ci\");'",  # Temporary
                 ],
                 "script" => [
-                    "julia -e 'using PkgBenchmarks, BenchmarkTools; a, b = benchmark(\"$pkg\", \"$baseline\", \"$candidate\"); j = judge(minimum(a), minimum(b)); println(leaves(j)); showall(a); showall(b); exit(!isempty(regressions(j)))'",
+                    "julia -e 'using PkgBenchmarks, BenchmarkTools; a, b = benchmark(\"$pkg\", \"origin/$baseline\", \"origin/$candidate\"); j = judge(minimum(a), minimum(b)); println(leaves(j)); showall(a); showall(b); exit(!isempty(regressions(j)))'",
                 ],
                 "after_success" => "echo hi",  # TODO: find a better way to override "after_success"
             ),
