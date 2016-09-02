@@ -2,6 +2,8 @@
 # Functionality that should be eventually included in Base.LibGit2
 #
 
+const NULL_OID = LibGit2.Oid()
+
 """
     checkout_safe!(repo::GitRepo, rev::AbstractString) -> nothing
 
@@ -15,8 +17,9 @@ function checkout_safe!(repo::LibGit2.GitRepo, rev::AbstractString)
     # TODO: `revparseid` issues:
     # - Doesn't notice ambiguous revisions. i.e. a tag with the same name as a branch.
     #   Issue could be from the `libgit2` library.
+    # - Returns a value when it cannot find the specified revision
     oid = LibGit2.revparseid(repo, rev)
-    println("OID of $rev is: $oid")
+    oid != NULL_OID || error("Unable to determine SHA of \"$rev\"")
 
     # TODO: `checkout!` seems broken in multiple ways including:
     # - Only uses full SHAs. Can not use tags, branches, or partial SHAs
