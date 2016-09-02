@@ -16,6 +16,7 @@ function checkout_safe!(repo::LibGit2.GitRepo, rev::AbstractString)
     # - Doesn't notice ambiguous revisions. i.e. a tag with the same name as a branch.
     #   Issue could be from the `libgit2` library.
     oid = LibGit2.revparseid(repo, rev)
+    println("OID of $rev is: $oid")
 
     # TODO: `checkout!` seems broken in multiple ways including:
     # - Only uses full SHAs. Can not use tags, branches, or partial SHAs
