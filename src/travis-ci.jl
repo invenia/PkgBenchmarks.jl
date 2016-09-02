@@ -19,7 +19,6 @@ function travis_benchmark(slug, token, pkg, baseline, candidate)
                     "git remote set-branches origin $baseline $candidate",
                     "if [[ -a .git/shallow ]]; then git fetch --unshallow; fi",
                     "julia -e 'Pkg.init(); symlink(pwd(), Pkg.dir(\"$pkg\")); Pkg.resolve(); Pkg.build(\"$pkg\");'",
-                    # "julia -e 'Pkg.clone(pwd()); Pkg.build(\"$pkg\");'",
                     "julia -e 'Pkg.clone(\"https://github.com/invenia/PkgBenchmarks.jl\"); Pkg.checkout(\"PkgBenchmarks\", \"travis-ci\");'",  # Temporary
                 ],
                 "script" => [
