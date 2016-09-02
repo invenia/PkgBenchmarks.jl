@@ -3,7 +3,7 @@ using Requests
 function travis_benchmark(slug, token, pkg, baseline, candidate)
     slug = replace(slug, "/", "%2F")
 
-    # Using the Travis API v3 beta
+    # Using the Travis API v3 beta. Documentation currently unreleased.
     # https://docs.travis-ci.com/user/triggering-builds
     body = Dict(
         "request" => Dict(
