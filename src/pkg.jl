@@ -6,24 +6,26 @@ results. Package are expected to have a "bench/benchmarks.jl" file which returns
 benchmark suite.
 """
 function benchmark(pkg::AbstractString, baseline::AbstractString, candidate::AbstractString="HEAD")
-    repo = Pkg.dir(pkg)
-    org_head = sha(repo)
+    repo = LibGit2.GitRepo(Pkg.dir(pkg))
+    org_head = LibGit2.head_oid(repo)
+    # repo = Pkg.dir(pkg)
+    # org_head = sha(repo)
 
     info("Benchmarking baseline ($baseline)")
     checkout_safe!(repo, baseline)
-    # println(string(LibGit2.head_oid(repo)))  # Show SHA
-    println(sha(repo))
+    println(string(LibGit2.head_oid(repo)))  # Show SHA
+    # println(sha(repo))
     trial_baseline = benchmark(pkg)
 
     info("Benchmarking candidate ($candidate)")
     checkout_safe!(repo, candidate)
-    # println(string(LibGit2.head_oid(repo)))  # Show SHA
-    println(sha(repo))
+    println(string(LibGit2.head_oid(repo)))  # Show SHA
+    # println(sha(repo))
     trial_candidate = benchmark(pkg)
 
     checkout_safe!(repo, org_head)
-    # println(string(LibGit2.head_oid(repo)))  # Show SHA
-    println(sha(repo))
+    println(string(LibGit2.head_oid(repo)))  # Show SHA
+    # println(sha(repo))
     trial_candidate = benchmark(pkg)
 
     checkout_safe!(repo, org_head)
