@@ -30,7 +30,7 @@ function benchmark(pkg::AbstractString)
     touch(results_file)
     code = """
         using BenchmarkTools
-        Pkg.build("$(escape_string(pkg))")  # TODO: Experimenting
+        # Pkg.build("$(escape_string(pkg))")  # Attempt to fix Travis (did not work)
         open("$(escape_string(results_file))", "w") do f
             suite = include(Pkg.dir("$(escape_string(pkg))", "bench", "benchmarks.jl"))
             results = run(suite, verbose=true)
